@@ -4,17 +4,34 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRowScopeInstance.align
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.artspaceapp.ui.theme.ArtSpaceAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -27,7 +44,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-
+                    ArtSpaceApp()
                 }
             }
         }
@@ -35,27 +52,122 @@ class MainActivity : ComponentActivity() {
 }
  @Composable
 fun ArtSpaceApp(modifier: Modifier = Modifier){
-Column {
- ArtSpaceImage()
+     Column(
+         horizontalAlignment = Alignment.CenterHorizontally,
+         verticalArrangement = Arrangement.Center
+     ) {
+         Column(
+             modifier = Modifier.weight(1f),
+             horizontalAlignment = Alignment.CenterHorizontally,
+             verticalArrangement = Arrangement.Center
+         ) {
+             ArtSpaceImage()
+         }
+         Column(
+             modifier = Modifier
+                 .height(150.dp)
+                 .padding(16.dp)
+                 .shadow(6.dp, shape = RectangleShape)
+                 .background(Color.LightGray),
+             horizontalAlignment = Alignment.CenterHorizontally,
+             verticalArrangement = Arrangement.Center
+
+         ){
+             ArtSpaceText(text = "Cyberpunk Cityscape")
+             Spacer(modifier = Modifier.height(15.dp))
+             ArtSpaceText(text = "Guilherme Stecanella (2018) ")
+
+         }
+
+
+         Spacer(modifier = Modifier.height(32.dp))
+         Row(
+             modifier = Modifier
+                 .fillMaxWidth(),
+             horizontalArrangement = Arrangement.SpaceEvenly
+         ) {
+             ArtSpaceButton(
+                 text = "Previous",
+                 modifier = Modifier.weight(1f)
+
+             )
+             ArtSpaceButton(
+                 text = "Next",
+                 modifier = Modifier.weight(1f)
+             )
+         }
+         Spacer(modifier = Modifier.height(32.dp))
 }
 
 }
 
 @Composable
 fun ArtSpaceImage(modifier: Modifier = Modifier){
-    Image(
-        painter = painterResource(R.drawable.picture_1),
-        contentDescription = "woman-standing-on-middle-of-road",
+    Box(
         modifier = Modifier
+            .fillMaxSize()
+            .padding(50.dp)
+            .shadow(6.dp, shape = RoundedCornerShape(16.dp))
+            .clip(RoundedCornerShape(16.dp)),
+        contentAlignment = Alignment.Center
+    ) {
+        Image(
+            painter = painterResource(R.drawable.picture_1),
+            contentDescription = "woman-standing-on-middle-of-road",
+            modifier = Modifier
+                .fillMaxSize(),
+            contentScale = ContentScale.Crop
+
         )
+    }
+
+
+}
+
+@Composable
+fun ArtSpaceText(text: String, modifier: Modifier = Modifier) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(text = text)
+    }
+}
+
+@Composable
+fun ArtSpaceButton(text: String, modifier: Modifier = Modifier) {
+
+    Box(
+        modifier = Modifier,
+        contentAlignment = Alignment.BottomCenter
+
+    ) {
+        Button(
+            modifier = Modifier
+                .padding(horizontal = 16.dp),
+            onClick = { /*TODO*/ }) {
+            Text(text = text, modifier = Modifier.padding(horizontal = 8.dp))
+        }
+    }
 }
 
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun ArtSpaceAppPreview(){
-    ArtSpaceApp()
+    ArtSpaceAppTheme {
+        // A surface container using the 'background' color from the theme
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            ArtSpaceApp()
+        }
+    }
 }
+
+
 /*
 
 @Composable
