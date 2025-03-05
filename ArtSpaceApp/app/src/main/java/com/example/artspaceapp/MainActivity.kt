@@ -22,6 +22,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -52,6 +56,17 @@ class MainActivity : ComponentActivity() {
 }
  @Composable
 fun ArtSpaceApp(modifier: Modifier = Modifier){
+    var artImage by remember {
+        mutableStateOf(R.drawable.picture_1
+
+        )
+    }
+     var artTitle by remember {
+         mutableStateOf("CyberPunk Cityscape")
+     }
+     var artistName by remember {
+         mutableStateOf("Guilherme Stecanella (2018)")
+     }
      Column(
          horizontalAlignment = Alignment.CenterHorizontally,
          verticalArrangement = Arrangement.Center
@@ -75,7 +90,7 @@ fun ArtSpaceApp(modifier: Modifier = Modifier){
          ){
              ArtSpaceText(text = "Cyberpunk Cityscape")
              Spacer(modifier = Modifier.height(15.dp))
-             ArtSpaceText(text = "Guilherme Stecanella (2018) ")
+             ArtSpaceText(text = "Guilherme Stecanella (2018)")
 
          }
 
@@ -146,7 +161,9 @@ fun ArtSpaceButton(text: String, modifier: Modifier = Modifier) {
         Button(
             modifier = Modifier
                 .padding(horizontal = 16.dp),
-            onClick = { /*TODO*/ }) {
+            onClick = {
+
+            }) {
             Text(text = text, modifier = Modifier.padding(horizontal = 8.dp))
         }
     }
