@@ -56,17 +56,9 @@ class MainActivity : ComponentActivity() {
 }
  @Composable
 fun ArtSpaceApp(modifier: Modifier = Modifier){
-    var artImage by remember {
-        mutableStateOf(R.drawable.picture_1
-
-        )
-    }
-     var artTitle by remember {
-         mutableStateOf("CyberPunk Cityscape")
-     }
-     var artistName by remember {
-         mutableStateOf("Guilherme Stecanella (2018)")
-     }
+     var artImage by remember { mutableStateOf(1) }
+     var artTitle by remember { mutableStateOf("Art work 1") }
+     var artistName by remember { mutableStateOf("Artist 1") }
      Column(
          horizontalAlignment = Alignment.CenterHorizontally,
          verticalArrangement = Arrangement.Center
@@ -76,7 +68,7 @@ fun ArtSpaceApp(modifier: Modifier = Modifier){
              horizontalAlignment = Alignment.CenterHorizontally,
              verticalArrangement = Arrangement.Center
          ) {
-             ArtSpaceImage()
+             ArtSpaceImage(imageId = artImage)
          }
          Column(
              modifier = Modifier
@@ -88,9 +80,9 @@ fun ArtSpaceApp(modifier: Modifier = Modifier){
              verticalArrangement = Arrangement.Center
 
          ){
-             ArtSpaceText(text = "Cyberpunk Cityscape")
+             ArtSpaceText(text = artTitle)
              Spacer(modifier = Modifier.height(15.dp))
-             ArtSpaceText(text = "Guilherme Stecanella (2018)")
+             ArtSpaceText(text = artistName)
 
          }
 
@@ -103,12 +95,50 @@ fun ArtSpaceApp(modifier: Modifier = Modifier){
          ) {
              ArtSpaceButton(
                  text = "Previous",
-                 modifier = Modifier.weight(1f)
+                 modifier = Modifier.weight(1f),
+                 onClick = {
+                     when(artImage){
+                         3 -> {
+                             artImage = 1
+                             artTitle = "ArtWork 1"
+                             artistName = "Artist 1"
+                         }
+                         2 -> {
+                             artImage = 3
+                             artTitle = "ArtWork 3"
+                             artistName = "Artist 3"
+                         }
+                          1-> {
+                             artImage = 2
+                             artTitle = "ArtWork 2"
+                             artistName = "Artist 2"
+                         }
+                     }
+                 }
 
              )
              ArtSpaceButton(
                  text = "Next",
-                 modifier = Modifier.weight(1f)
+                 modifier = Modifier.weight(1f),
+                 onClick = {
+                     when(artImage){
+                         1 -> {
+                             artImage = 2
+                             artTitle = "ArtWork 2"
+                             artistName = "Artist 2"
+                         }
+                         2 -> {
+                             artImage = 3
+                             artTitle = "ArtWork 3"
+                             artistName = "Artist 3"
+                         }
+                         3 -> {
+                             artImage = 1
+                             artTitle = "ArtWork 1"
+                             artistName = "Artist 1"
+                         }
+                     }
+                 }
              )
          }
          Spacer(modifier = Modifier.height(32.dp))
@@ -117,7 +147,7 @@ fun ArtSpaceApp(modifier: Modifier = Modifier){
 }
 
 @Composable
-fun ArtSpaceImage(modifier: Modifier = Modifier){
+fun ArtSpaceImage(modifier: Modifier = Modifier, imageId: Int){
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -126,9 +156,15 @@ fun ArtSpaceImage(modifier: Modifier = Modifier){
             .clip(RoundedCornerShape(16.dp)),
         contentAlignment = Alignment.Center
     ) {
+        val imageResource = when(imageId){
+            1 -> R.drawable.picture_1
+            2 -> R.drawable.picture_2
+            3 -> R.drawable.picture_3
+            else -> R.drawable.picture_1
+        }
         Image(
-            painter = painterResource(R.drawable.picture_1),
-            contentDescription = "woman-standing-on-middle-of-road",
+            painter = painterResource(imageResource),
+            contentDescription = "Art work image",
             modifier = Modifier
                 .fillMaxSize(),
             contentScale = ContentScale.Crop
@@ -151,7 +187,9 @@ fun ArtSpaceText(text: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ArtSpaceButton(text: String, modifier: Modifier = Modifier) {
+fun ArtSpaceButton(
+    text: String, modifier: Modifier = Modifier, onClick: () -> Unit
+) {
 
     Box(
         modifier = Modifier,
@@ -161,9 +199,7 @@ fun ArtSpaceButton(text: String, modifier: Modifier = Modifier) {
         Button(
             modifier = Modifier
                 .padding(horizontal = 16.dp),
-            onClick = {
-
-            }) {
+            onClick = onClick) {
             Text(text = text, modifier = Modifier.padding(horizontal = 8.dp))
         }
     }
@@ -294,26 +330,6 @@ fun RoundTheTipRow(
 
 }
 
-/**
- * Calculates the tip based on the user input and format the tip amount
- * according to the local currency.
- * Example would be "$10.00".
- */
-@VisibleForTesting
-internal fun calculateTip(amount: Double, tipPercent: Double = 15.0, roundUp: Boolean): String {
-    var tip = tipPercent / 100 * amount
-    if (roundUp) {
-        tip = kotlin.math.ceil(tip)
-    }
-    return NumberFormat.getCurrencyInstance().format(tip)
-}
 
-@Preview(showBackground = true)
-@Composable
-fun TipTimeLayoutPreview() {
-    TipTimeTheme {
-        TipTimeLayout()
-    }
-}
 
  */
