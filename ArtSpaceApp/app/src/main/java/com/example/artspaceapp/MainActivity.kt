@@ -223,113 +223,208 @@ fun ArtSpaceAppPreview(){
 
 /*
 
-@Composable
-fun TipTimeLayout() {
-    var amountInput by remember { mutableStateOf("") }
-    var tipInput by remember { mutableStateOf("") }
-    val amount = amountInput.toDoubleOrNull() ?: 0.0
-    val tipPercent = tipInput.toDoubleOrNull() ?: 0.0
-    var roundUp by remember {
-        mutableStateOf(false)
-    }
+That’s great to hear! Let’s move on to another project to help you practice and solidify your understanding of Jetpack Compose, state management, and UI design. I’ll give you a new project idea, along with some guidelines to help you structure your work.
 
-    val tip = calculateTip(amount, tipPercent, roundUp)
-    Column(
-        modifier = Modifier
-            .padding(40.dp)
-            .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = stringResource(R.string.calculate_tip),
-            modifier = Modifier
-                .padding(bottom = 16.dp)
-                .align(alignment = Alignment.Start)
-        )
-        EditNumberField(
-            label = R.string.bill_amount,
-            value = amountInput,
-            onValueChange = { amountInput = it },
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Next
-            ),
-            leadingIcon = R.drawable.money,
-            modifier = Modifier
-                .padding(bottom = 32.dp)
-                .fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(15.dp))
-        EditNumberField(
-            label = R.string.how_was_the_service,
-            value = tipInput,
-            onValueChange = { tipInput = it },
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Done
-            ),
-            leadingIcon = R.drawable.percent,
-            modifier = Modifier
-                .padding(bottom = 32.dp)
-                .fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(15.dp))
-        RoundTheTipRow(roundUp = roundUp, onRoundUpChanged ={roundUp = it} )
-        Spacer(modifier = Modifier.height(15.dp))
-        Text(
-            text = stringResource(R.string.tip_amount, tip),
-            style = MaterialTheme.typography.headlineSmall
-        )
-        Spacer(modifier = Modifier.height(150.dp))
-    }
-}
+New Project: Recipe Viewer App
+App Description
+Create a Recipe Viewer App that displays a list of recipes. Each recipe should have:
 
-@Composable
-fun EditNumberField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    @StringRes label: Int,
-    @DrawableRes leadingIcon: Int,
-    keyboardOptions: KeyboardOptions,
-    modifier: Modifier = Modifier
-) {
+A name.
 
-    TextField(
-        value = value,
-        leadingIcon = { Icon(painter = painterResource(id = leadingIcon), contentDescription =null
-        )},
-        onValueChange = onValueChange,
-        label = { Text(stringResource(label)) },
-        singleLine = true,
-        keyboardOptions = keyboardOptions
+A short description.
+
+An image.
+
+A button to view more details (e.g., ingredients and instructions).
+
+The app should allow users to:
+
+Scroll through a list of recipes.
+
+Tap a recipe to view its details.
+
+Navigate back to the list from the details screen.
+
+Guidelines
+Here’s a step-by-step guide to help you structure the app. Try to implement it on your own, and if you get stuck, refer to the hints or ask for help.
+
+Step 1: Set Up the Project
+Create a new Jetpack Compose project in Android Studio.
+
+Add any necessary dependencies (e.g., for images or navigation).
+
+Step 2: Define the Data Model
+Create a data class to represent a recipe:
+
+kotlin
+Copy
+data class Recipe(
+    val id: Int,
+    val name: String,
+    val description: String,
+    val imageRes: Int, // Use resource IDs for images
+    val ingredients: List<String>,
+    val instructions: List<String>
+)
+Create a list of sample recipes in your ViewModel or directly in your composable:
+
+kotlin
+Copy
+val recipes = listOf(
+    Recipe(
+        id = 1,
+        name = "Pasta Carbonara",
+        description = "Creamy Italian pasta dish.",
+        imageRes = R.drawable.pasta_carbonara,
+        ingredients = listOf("Spaghetti", "Eggs", "Parmesan", "Bacon"),
+        instructions = listOf("Boil pasta", "Cook bacon", "Mix eggs and cheese", "Combine all")
+    ),
+    Recipe(
+        id = 2,
+        name = "Chicken Curry",
+        description = "Spicy and flavorful curry.",
+        imageRes = R.drawable.chicken_curry,
+        ingredients = listOf("Chicken", "Curry Powder", "Coconut Milk", "Onions"),
+        instructions = listOf("Cook chicken", "Sauté onions", "Add curry powder", "Simmer with coconut milk")
     )
-}
+    // Add more recipes
+)
+Step 3: Create the Recipe List Screen
+Create a composable to display the list of recipes:
 
+kotlin
+Copy
 @Composable
-fun RoundTheTipRow(
-    roundUp :Boolean,
-    onRoundUpChanged : (Boolean) -> Unit,
-    modifier: Modifier = Modifier
-){
-    Row (
+fun RecipeList(recipes: List<Recipe>, onRecipeClick: (Recipe) -> Unit) {
+    LazyColumn {
+        items(recipes) { recipe ->
+            RecipeItem(recipe = recipe, onClick = { onRecipeClick(recipe) })
+        }
+    }
+}
+Create a composable for each recipe item:
+
+kotlin
+Copy
+@Composable
+fun RecipeItem(recipe: Recipe, onClick: () -> Unit) {
+    Card(
         modifier = Modifier
             .fillMaxWidth()
-            .size(48.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ){
-        Text(text = stringResource(R.string.round_up_tip))
-        Switch(
+            .padding(8.dp)
+            .clickable { onClick() },
+        elevation = 4.dp
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Image(
+                painter = painterResource(recipe.imageRes),
+                contentDescription = recipe.name,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(150.dp)
+                    .clip(RoundedCornerShape(8.dp)),
+                contentScale = ContentScale.Crop
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = recipe.name, style = MaterialTheme.typography.headlineSmall)
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(text = recipe.description, style = MaterialTheme.typography.bodyMedium)
+        }
+    }
+}
+Step 4: Create the Recipe Details Screen
+Create a composable to display the details of a selected recipe:
+
+kotlin
+Copy
+@Composable
+fun RecipeDetails(recipe: Recipe, onBackClick: () -> Unit) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        Image(
+            painter = painterResource(recipe.imageRes),
+            contentDescription = recipe.name,
             modifier = Modifier
                 .fillMaxWidth()
-                .wrapContentWidth(Alignment.End),
-            checked = roundUp,
-            onCheckedChange = onRoundUpChanged
+                .height(200.dp)
+                .clip(RoundedCornerShape(8.dp)),
+            contentScale = ContentScale.Crop
         )
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(text = recipe.name, style = MaterialTheme.typography.headlineLarge)
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(text = "Ingredients", style = MaterialTheme.typography.headlineSmall)
+        recipe.ingredients.forEach { ingredient ->
+            Text(text = "- $ingredient", style = MaterialTheme.typography.bodyMedium)
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(text = "Instructions", style = MaterialTheme.typography.headlineSmall)
+        recipe.instructions.forEachIndexed { index, instruction ->
+            Text(text = "${index + 1}. $instruction", style = MaterialTheme.typography.bodyMedium)
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(onClick = onBackClick) {
+            Text(text = "Back to List")
+        }
     }
-
 }
+Step 5: Add Navigation
+Use NavController to navigate between the list and details screens:
 
+kotlin
+Copy
+@Composable
+fun RecipeApp() {
+    val navController = rememberNavController()
+    NavHost(navController = navController, startDestination = "recipeList") {
+        composable("recipeList") {
+            RecipeList(recipes = recipes, onRecipeClick = { recipe ->
+                navController.navigate("recipeDetails/${recipe.id}")
+            })
+        }
+        composable("recipeDetails/{recipeId}") { backStackEntry ->
+            val recipeId = backStackEntry.arguments?.getString("recipeId")?.toIntOrNull()
+            val recipe = recipes.find { it.id == recipeId }
+            if (recipe != null) {
+                RecipeDetails(recipe = recipe, onBackClick = { navController.popBackStack() })
+            }
+        }
+    }
+}
+Step 6: Test the App
+Run the app and test the following:
 
+Scroll through the list of recipes.
+
+Tap a recipe to view its details.
+
+Navigate back to the list from the details screen.
+
+Key Concepts to Practice
+State Management: Use mutableStateOf or ViewModel to manage state.
+
+Navigation: Use NavController to navigate between screens.
+
+Composable Functions: Break down the UI into reusable composables.
+
+Lists: Use LazyColumn to display a scrollable list of items.
+
+Data Modeling: Use data class to define structured data.
+
+Stretch Goals
+If you finish the basic app, try adding these features:
+
+Search Bar: Allow users to search for recipes by name.
+
+Favorites: Add a button to mark recipes as favorites and display them in a separate list.
+
+Animations: Add animations when navigating between screens or displaying recipe details.
+
+Let me know if you need help with any part of this project! 😊
 
  */
